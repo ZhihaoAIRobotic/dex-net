@@ -161,8 +161,8 @@ def generate_gqcnn_dataset(dataset_path,
     """
     # read data gen params
     output_dir = dataset_path
-    gripper = RobotGripper.load(gripper_name)
-    image_samples_per_stable_pose = config['images_per_stable_pose']
+    gripper = RobotGripper.load(gripper_name) 
+    image_samples_per_stable_pose = config['images_per_stable_pose'] 
     stable_pose_min_p = config['stable_pose_min_p']
     
     # read gqcnn params
@@ -174,21 +174,21 @@ def generate_gqcnn_dataset(dataset_path,
     cx_crop = float(im_crop_width) / 2
     cy_crop = float(im_crop_height) / 2
 
-    # open database
-    dataset_names = target_object_keys.keys()
-    datasets = [database.dataset(dn) for dn in dataset_names]
+    # open database ???????A database is an HDF5 file containing multiple datasets (e.g. ModelNet, KIT, YCB, 3DNet)
+    dataset_names = target_object_keys.keys()  #(e.g. ModelNet, KIT, YCB, 3DNet)
+    datasets = [database.dataset(dn) for dn in dataset_names] 
 
-    # set target objects
-    for dataset in datasets:
-        if target_object_keys[dataset.name] == 'all':
-            target_object_keys[dataset.name] = dataset.object_keys
+    # set target objects 
+    for dataset in datasets:  
+        if target_object_keys[dataset.name] == 'all':  
+            target_object_keys[dataset.name] = dataset.object_keys # Data containing handles of objects.物体的句柄
 
     # setup grasp params
     table_alignment_params = config['table_alignment']
-    min_grasp_approach_offset = -np.deg2rad(table_alignment_params['max_approach_offset'])
-    max_grasp_approach_offset = np.deg2rad(table_alignment_params['max_approach_offset'])
-    max_grasp_approach_table_angle = np.deg2rad(table_alignment_params['max_approach_table_angle'])
-    num_grasp_approach_samples = table_alignment_params['num_approach_offset_samples']
+    min_grasp_approach_offset = -np.deg2rad(table_alignment_params['max_approach_offset']) #？grasp collision checking
+    max_grasp_approach_offset = np.deg2rad(table_alignment_params['max_approach_offset']) #？grasp collision checking
+    max_grasp_approach_table_angle = np.deg2rad(table_alignment_params['max_approach_table_angle']) #抓取轴与桌面法向量之间的最大夹角
+    num_grasp_approach_samples = table_alignment_params['num_approach_offset_samples'] #？grasp collision checking
 
     phi_offsets = []
     if max_grasp_approach_offset == min_grasp_approach_offset:
@@ -232,7 +232,7 @@ def generate_gqcnn_dataset(dataset_path,
     grasps = dataset.grasps(obj.key, gripper=gripper.name)
     grasp_metrics = dataset.grasp_metrics(obj.key, grasps, gripper=gripper.name)
     metric_names = grasp_metrics[grasp_metrics.keys()[0]].keys()
-    for metric_name in metric_names:
+    for metric_name in metric_names: 
         tensor_config['fields'][metric_name] = {}
         tensor_config['fields'][metric_name]['dtype'] = 'float32'
 
@@ -335,7 +335,7 @@ def generate_gqcnn_dataset(dataset_path,
         # save to file
         logging.info('Saving to file')
         pkl.dump(candidate_grasps_dict, open(grasp_cache_filename, 'wb'))
-
+    # 上面为止，产生并记录可行的抓取。
     # 2. Render a dataset of images and associate the gripper pose with image coordinates for each grasp in the Dex-Net database
 
     # setup variables
