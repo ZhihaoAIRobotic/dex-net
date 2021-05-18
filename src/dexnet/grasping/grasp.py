@@ -455,9 +455,9 @@ class ParallelJawPtGrasp3D(PointGrasp):
             approach_loa1 = ParallelJawPtGrasp3D.create_line_of_action(g1_world, -approach_axis, approach_dist, obj,
                                                                        num_approach_samples, min_width = 0)
             approach_loa2 = ParallelJawPtGrasp3D.create_line_of_action(g2_world, -approach_axis, approach_dist, obj,
-                                                                       num_approach_samples, min_width = 0)
+                                                                       num_approach_samples, min_width = 0) #create_line_of_action有个默认参数将line转到grid坐标系下。
             c1_found, _ = ParallelJawPtGrasp3D.find_contact(approach_loa1, obj, vis=vis)
-            c2_found, _ = ParallelJawPtGrasp3D.find_contact(approach_loa2, obj, vis=vis)
+            c2_found, _ = ParallelJawPtGrasp3D.find_contact(approach_loa2, obj, vis=vis) #find_contact 需要line_of_action，the points visited as the fingers close (grid coords)
             approach_collision = c1_found or c2_found
             if approach_collision:
                 return False, None
